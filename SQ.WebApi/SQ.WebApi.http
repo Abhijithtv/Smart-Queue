@@ -1,0 +1,6 @@
+@SQ.WebApi_HostAddress = http://localhost:5197
+
+GET {{SQ.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
