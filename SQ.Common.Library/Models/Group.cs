@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SQ.Common.Library
+namespace SQ.Common.Library.Models
 {
     public class Group
     {
@@ -15,7 +15,7 @@ namespace SQ.Common.Library
         public string OwnerId { get; set; }
 
         public int TotalMembers { get; set; }
-        
+
         /// <summary>
         /// change its value as active member move out of it.
         /// </summary>

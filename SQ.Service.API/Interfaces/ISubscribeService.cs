@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SQ.Service.API.Interfaces
 {
-    internal class ISubscribeService
+    public interface ISubscribeService
     {
+
     }
 }
