@@ -1,4 +1,5 @@
-﻿using SQ.Service.API.Interfaces;
+﻿using SQ.Common.Library.Helpers;
+using SQ.Service.API.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,17 @@ namespace SQ.Service.API.GroupService
 {
     public class GroupGenerateService :IGenerateGroupService
     {
-        
+        public static Dictionary<string,string> OwnerGroupMapping = new Dictionary<string,string>();
         public string GenerateGroup(string ownerId)
         {
             _EnsureValidOwner(ownerId);
             string groupUniqueId = _GenerateGroup(ownerId);
+
+            // todo: allocate a separate a new thread to run each socket server.
+
+            NetworkHelperV2.CreateServerSocket(groupUniqueId);
+            NetworkHelperV2.GroupServerStart(groupUniqueId);
+            OwnerGroupMapping.Add(ownerId, groupUniqueId);
             return groupUniqueId;
         }
 
@@ -28,6 +35,21 @@ namespace SQ.Service.API.GroupService
         string _GenerateGroup(string ownerId)
         {
             return ownerId + DateTime.Now.Hour.ToString() + DateTime.Now.Second.ToString();
+        }
+
+        public int JoinGroupService(string groupId)
+        {
+            return NetworkHelperV2.TryGetGroupServerPort(groupId);
+        }
+
+        public async Task<bool> StopGroupServer(string ownerId) 
+        {
+            //todo: from db get ownerId to GroupMapping
+            string groupUniqueId;
+            if(!OwnerGroupMapping.TryGetValue(ownerId, out groupUniqueId)) { return false; }
+            var ok = await NetworkHelperV2.GroupServerStop(groupUniqueId);
+            if (ok) { OwnerGroupMapping.Remove(ownerId); }
+            return ok;
         }
     }
 }

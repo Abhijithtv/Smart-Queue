@@ -27,10 +27,18 @@ namespace SQ.Common.Library.Helpers
             return this;
         }
 
+        public NetworkHelper CreateIpEndPoint(int port)
+        {
+            iPEndPoint = new IPEndPoint(IP_Adress, port);
+            return this;
+        }
+
         public Socket CreateSocket()
         {
             if (iPEndPoint == null) throw new Exception("create an endpoint first");
             Socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+          /*  Socket.ReceiveTimeout = 200000;
+            Socket.SendTimeout = 200000;*/
             return Socket;
         }
 
