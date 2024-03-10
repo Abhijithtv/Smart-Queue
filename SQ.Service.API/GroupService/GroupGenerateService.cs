@@ -1,4 +1,5 @@
-﻿using SQ.Common.Library.Helpers;
+﻿using SQ.Common.Library.Handlers;
+using SQ.Common.Library.Helpers;
 using SQ.Service.API.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,10 @@ namespace SQ.Service.API.GroupService
             _EnsureValidOwner(ownerId);
             string groupUniqueId = _GenerateGroup(ownerId);
 
-            // todo: allocate a separate a new thread to run each socket server.
-
             NetworkHelperV2.CreateServerSocket(groupUniqueId);
-            NetworkHelperV2.GroupServerStart(groupUniqueId);
             OwnerGroupMapping.Add(ownerId, groupUniqueId);
+            ThreadHandler.AddWork(() => NetworkHelperV2.GroupServerStart(groupUniqueId));
+            
             return groupUniqueId;
         }
 

@@ -1,7 +1,9 @@
 
+using SQ.Common.Library.Handlers;
 using SQ.Common.Library.Helpers;
 using SQ.Service.API.GroupService;
 using SQ.Service.API.Interfaces;
+using SQ.Service.API.MessageService;
 using System.Net.Sockets;
 using System.Text;
 
@@ -21,6 +23,7 @@ namespace SQ.WebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IGenerateGroupService, GroupGenerateService>();
+            builder.Services.AddScoped<IPublishService,PublishService>();  
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -37,9 +40,7 @@ namespace SQ.WebApi
 
             app.MapControllers();
 
-            //ConnectAsync();
-            Count++;
-            Console.WriteLine(Count);
+            ThreadHandler.SocketPoolInit();
 
             app.Run();
         }

@@ -86,6 +86,7 @@ namespace SQ.Common.Library.Helpers
                     return;
                 }
 
+                //Socket client = await socketWrapper.Socket.AcceptAsync();
                 Socket client = await socketWrapper.Socket.AcceptAsync();
 
                 try
@@ -115,6 +116,9 @@ namespace SQ.Common.Library.Helpers
             byte[] bytes = new byte[256];
             int numByte = await client.ReceiveAsync(bytes);
             var recvMsg = Encoding.ASCII.GetString(bytes, 0, numByte); //can validate the msg.
+            
+            
+            //todo: remove disconnected client sockets.
 
             string msg = (clientCount >= max_clients) ? "Max-client-reached" : "Successs";
             var msgBytes = Encoding.UTF8.GetBytes(msg);
